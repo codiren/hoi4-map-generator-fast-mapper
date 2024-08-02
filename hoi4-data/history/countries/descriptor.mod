@@ -1,0 +1,15 @@
+tags={
+	"Alternative History"
+	"Balance"
+	"Events"
+	"Map"
+	"Military"
+	"National Focuses"
+	"Technologies"
+	"Ideologies"
+	"Historical"
+	"Gameplay"
+}
+picture="thumbnail.png"
+version="0.2.0"
+supported_version="1.14.*"

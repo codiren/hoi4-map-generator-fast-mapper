@@ -1,0 +1,149 @@
+﻿capital = 267
+
+if = {
+	limit = {
+		NOT = {
+			has_dlc = "No Step Back"
+		}
+	}
+	set_oob = "AFG_1936"
+}
+if = {
+	limit = {
+		has_dlc = "No Step Back"
+	}
+	set_oob = "AFG_1936_nsb"
+}
+
+set_technology = {
+	infantry_weapons = 1
+}
+if = {
+	limit = {
+		NOT = { has_dlc = "No Step Back" }
+	}
+	set_technology = { #vanilla keeps the old system, nsb afghanistan will no longer produce some of the most advanced tanks in the world
+		gwtank = 1
+		basic_light_tank = 1
+	}
+}
+
+if = {
+	limit = {
+		has_dlc = "No Step Back"
+	}
+	set_technology = { 
+		gwtank_chassis = 1
+		
+	}
+}
+
+recruit_character = AFG_mohammed_zahir_shah
+recruit_character = AFG_akram_sattari
+recruit_character = AFG_yaqub_khan
+recruit_character = AFG_mihrdil_shahnawaz
+recruit_character = AFG_sardar_shah_wali_khan
+recruit_character = AFG_hares_muzafar
+recruit_character = AFG_asadullah_seraj_khan
+recruit_character = AFG_gholam_wali
+recruit_character = AFG_nasirullah_husain
+recruit_character = AFG_muhammad_amin_bughra
+recruit_character = AFG_azam_ataullah
+recruit_character = AFG_mohammed_daoud_khan
+recruit_character = AFG_renato_bardolucci
+recruit_character = AFG_ali_muhammed_khan
+recruit_character = AFG_mohammed_etemadi_khan
+recruit_character = AFG_aalem_daana
+recruit_character = AFG_wazir_akbar_khan
+recruit_character = AFG_mahmud_khan
+recruit_character = AFG_haji_faiz_muhammed_zikeria
+recruit_character = AFG_mohammad_hashim_khan
+recruit_character = AFG_muhammed_nowroz
+
+
+1939.1.1 = {
+
+	add_political_power = 1198
+	add_command_power = 100
+	
+	#generic focuses
+	complete_national_focus = army_effort
+	complete_national_focus = equipment_effort
+	complete_national_focus = motorization_effort
+	complete_national_focus = aviation_effort
+	complete_national_focus = construction_effort_2
+	complete_national_focus = production_effort_2
+	complete_national_focus = infrastructure_effort
+	complete_national_focus = industrial_effort
+	complete_national_focus = construction_effort
+	complete_national_focus = production_effort
+	
+	oob = "AFG_1939"
+	if = {
+		limit = { has_dlc = "By Blood Alone" }
+			set_air_oob = "AFG_1939_air_bba"
+		else = {
+			set_air_oob = "AFG_1939_air_legacy"
+			set_technology = {
+				early_fighter = 1
+				CAS1 = 1
+			}
+		}
+	}
+	set_technology = {
+		
+		gw_artillery = 1
+
+		#doctrines
+		air_superiority = 1
+		grand_battle_plan = 1
+		trench_warfare = 1
+		fleet_in_being = 1
+		battlefleet_concentration = 1
+		convoy_sailing = 1
+
+
+		#electronics
+		electronic_mechanical_engineering = 1
+		radio = 1
+		radio_detection = 1
+		mechanical_computing = 1
+
+		#industry
+		basic_machine_tools = 1
+		improved_machine_tools = 1
+		advanced_machine_tools = 1
+		fuel_silos = 1
+		construction1 = 1
+		construction2 = 1
+		dispersed_industry = 1
+		dispersed_industry2 = 1
+	}
+}
+
+set_politics = {
+	ruling_party = neutrality
+	last_election = "1936.1.1"
+	election_frequency = 48
+	elections_allowed = no
+}
+
+set_popularities = {
+	fascism = 15
+	communism = 10
+	neutrality = 75
+}
+
+1939.1.1 = {
+	set_politics = {
+		ruling_party = neutrality
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		fascism = 20
+		communism = 10
+		neutrality = 70
+	}
+}
