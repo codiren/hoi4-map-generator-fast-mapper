@@ -3,6 +3,7 @@
 #include<filesystem>
 #include <sstream>
 #include<windows.h>
+#include <shlobj.h>
 #include<vector>
 #include <cstdlib>
 #include <sstream>
@@ -308,7 +309,7 @@ void editbmp(const std::string& filename) {
 }*/
 //----INTERFACES----INTERFACES----INTERFACES----INTERFACES----INTERFACES----INTERFACES
 struct modClass{
-	std::set<std::string> tags;
+	std::set<std::string> tags;//not country tags
 	std::vector<std::string> replace;
 	std::string gameVersion = "1.14.*";
 	int timesbuilt = 1;
@@ -319,17 +320,18 @@ struct modClass{
 		std::filesystem::remove_all("src");
 		std::filesystem::create_directories("src");
 	}
-    ~modClass(){
-		//copy_file("hoi4-data/descriptor.mod", "src/descriptor.mod");
-		if (std::filesystem::exists("builderdata")) {
-			std::ifstream infile("builderdata");
-			infile >> timesbuilt;
-			infile.close();
+	void makeDescriptor(bool outsider = false){
+		std::ofstream descriptor;
+		if (outsider) {
+			CHAR my_documents[MAX_PATH];
+			HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+			std::string documentsPath(my_documents);
+			documentsPath += "\\Paradox Interactive\\Hearts of Iron IV\\mod\\generatedMapModDescriptor.mod";
+			//print(documentsPath);
+			descriptor.open(documentsPath);
+		} else {
+			descriptor.open("src/descriptor.mod");
 		}
-		std::ofstream outfile("builderdata");
-		outfile << ++timesbuilt;
-		outfile.close();
-		std::ofstream descriptor("src/descriptor.mod");
 		descriptor<<"tags={\n";
 		for(std::string i : tags){
 			descriptor<<"\t\""<<i<<"\"\n";
@@ -342,9 +344,46 @@ struct modClass{
 			descriptor<<"replace_path=\""<<i<<"\"\n";
 		}
 		descriptor<<"supported_version=\""<<gameVersion<<"\"";
-		copy_file("hoi4-data/thumbnail.png", "src/thumbnail.png");
+		if(outsider){
+			char path[MAX_PATH];
+			GetModuleFileNameA(NULL, path, MAX_PATH);
+			for (char& c : path) {//stupid windows slashes
+				if (c == '\\') {
+					c = '/';
+				}
+			}
+			std::string realPath = std::string(path);
+			std::string folderPath;
+			auto pathChunks = split(realPath,"/");
+			for(int i = 0;i<pathChunks.size()-1;i++){
+				folderPath += pathChunks[i]+"/";
+			}
+			descriptor<<"\npath=\""<<folderPath<<"src\"";
+		}
 		descriptor.close();
+	}
+    ~modClass(){
+		//copy_file("hoi4-data/descriptor.mod", "src/descriptor.mod");
+		if (std::filesystem::exists("builderdata")) {
+			std::ifstream infile("builderdata");
+			infile >> timesbuilt;
+			infile.close();
+		}
+		std::ofstream outfile("builderdata");
+		outfile << ++timesbuilt;
+		outfile.close();
+		makeDescriptor();
+		makeDescriptor(true);
+		copy_file("hoi4-data/thumbnail.png", "src/thumbnail.png");
+		
 		std::cout<<"SUCCESS, took "<<((GetTickCount()-start)/1000.)<<" seconds\n";//its over!
+		int obfuscatedString[] = {104, 116, 116, 112, 115, 58, 47, 47, 103, 105, 116, 104, 117, 98, 46, 99, 111, 109, 47, 99, 111, 100, 105, 114, 101, 110, 47, 104, 111, 105, 52, 45, 109, 97, 112, 45, 103, 101, 110, 101, 114, 97, 116, 111, 114, 45, 102, 97, 115, 116, 45, 109, 97, 112, 112, 101, 114};
+    size_t length = sizeof(obfuscatedString) / sizeof(obfuscatedString[0]);
+    std::string sum;
+    for (size_t i = 0; i < length; ++i) {
+        sum += static_cast<char>(obfuscatedString[i]);
+    }
+    std::cout << sum << std::endl;
 	}
 };modClass mod;
 struct focusInterface{
@@ -1025,7 +1064,8 @@ int main(){//system("cls");
 	eu4Controller.readDefinitionFile();
 	print(mapController.idCounter);
 	*/
-	//print(");
+	print("starting");
+	//watermark
 	mapController.drawnMap();
 	//mapController.setSize();
 	//system("pause");
