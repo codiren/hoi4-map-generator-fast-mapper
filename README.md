@@ -1,3 +1,4 @@
+Navigate to "Releases" on the right to download
 **Program Information**
 
 - **Platform:** Windows only
