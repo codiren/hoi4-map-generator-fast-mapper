@@ -1,4 +1,4 @@
-Navigate to "Releases" on the right to download
+To download: Navigate to "Releases" on the right, and click on "release.7z"
 
 **Program Information**
 
