@@ -78,6 +78,7 @@ void print(int input){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<
 void print(int input,int in){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|"<<input<<" "<<in<<"\n";}
 void print(double input){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|"<<input<<"\n";}
 int randomNum(int min, int max) {
+	return lower + std::rand() % (upper - lower + 1);
     std::random_device rd;  // Obtain a random number from hardware
     std::mt19937 gen(rd()); // Seed the generator
     std::uniform_int_distribution<> distr(min, max); // Define the range
@@ -377,13 +378,13 @@ struct modClass{
 		copy_file("hoi4-data/thumbnail.png", "src/thumbnail.png");
 		
 		std::cout<<"SUCCESS, took "<<((GetTickCount()-start)/1000.)<<" seconds\n";//its over!
-		int obfuscatedString[] = {104, 116, 116, 112, 115, 58, 47, 47, 103, 105, 116, 104, 117, 98, 46, 99, 111, 109, 47, 99, 111, 100, 105, 114, 101, 110, 47, 104, 111, 105, 52, 45, 109, 97, 112, 45, 103, 101, 110, 101, 114, 97, 116, 111, 114, 45, 102, 97, 115, 116, 45, 109, 97, 112, 112, 101, 114};
-    size_t length = sizeof(obfuscatedString) / sizeof(obfuscatedString[0]);
-    std::string sum;
-    for (size_t i = 0; i < length; ++i) {
-        sum += static_cast<char>(obfuscatedString[i]);
-    }
-    std::cout << sum << std::endl;
+		//int obfuscatedString[] = {104, 116, 116, 112, 115, 58, 47, 47, 103, 105, 116, 104, 117, 98, 46, 99, 111, 109, 47, 99, 111, 100, 105, 114, 101, 110, 47, 104, 111, 105, 52, 45, 109, 97, 112, 45, 103, 101, 110, 101, 114, 97, 116, 111, 114, 45, 102, 97, 115, 116, 45, 109, 97, 112, 112, 101, 114};
+    //size_t length = sizeof(obfuscatedString) / sizeof(obfuscatedString[0]);
+    //std::string sum;
+    //for (size_t i = 0; i < length; ++i) {
+    //    sum += static_cast<char>(obfuscatedString[i]);
+    //}
+    std::cout << "https://github.com/codiren/hoi4-map-generator-fast-mapper" << std::endl;
 	}
 };modClass mod;
 struct focusInterface{
@@ -654,11 +655,12 @@ struct countryControllerClass{
 	}
 	std::string generateName(){
 		std::vector<std::string> endings = {"ia","tha","ny","land"};
-		std::vector<std::string> middle = {"ma","an","ol","ga"};
-		std::vector<std::string> start = {"Ro","Por","Den","Ire","Sov"};
+		std::vector<std::string> middle = {"ma","an","ol","ga",""};
+		std::vector<std::string> start = {"Ro","Por","Den","Ire","Sov","Ga"};
 		auto getRandomElement = [](const std::vector<std::string>& vec) -> std::string {return vec[std::rand() % vec.size()];};
 		std::string name = getRandomElement(start) + getRandomElement(middle) + getRandomElement(endings);
 		if(usedNames.find(name) != usedNames.end())name = getRandomElement(start) + getRandomElement(middle) + getRandomElement(endings);
+		//if(usedNames.find(name) != usedNames.end())name = "Saint "+name;
 		if(usedNames.find(name) != usedNames.end())name = "New "+name;
 		usedNames.insert(name);
 		return name;
@@ -760,15 +762,21 @@ struct mapClass{
 		states.push_back(state);
 		return state;
 	}
+	stateInterface* addState(stateInterface* state){
+		state->id = ++stateIdCounter;
+		states.push_back(state);
+		return state;
+	}
 	std::string generateName(){
-		std::vector<std::string> endings = {"ville","as","ston","son","burg","mer","ers","field"};
-		std::vector<std::string> middle = {"th","ing","che","ne","me","sta","en","de","be"};
-		std::vector<std::string> start = {"Spring","Alex","Bla","Nash","Jack","Maid","Ox","Bos"};
+		std::vector<std::string> endings = {"ville","as","ston","son","burg","mer","ers","field","ille","grad","ner"};
+		std::vector<std::string> middle = {"th","ing","che","ne","me","sta","en","de","be","","fen","sh"};
+		std::vector<std::string> start = {"Spring","Alex","Bla","Nash","Jack","Maid","Ox","Bos","Se","Ath","Bra"};
 		auto getRandomElement = [](const std::vector<std::string>& vec) -> std::string {
         return vec[std::rand() % vec.size()];
 		};
 		std::string name = getRandomElement(start) + getRandomElement(middle) + getRandomElement(endings);
 		if(usedNames.find(name) != usedNames.end())name = getRandomElement(start) + getRandomElement(middle) + getRandomElement(endings);
+		//if(usedNames.find(name) != usedNames.end())name = name+" Hill";
 		if(usedNames.find(name) != usedNames.end())name = "New "+name;
 		usedNames.insert(name);
 		return name;
@@ -1212,7 +1220,7 @@ void generateRandomProvincesOntoBMP(BMPImage& image, int averageProvinceSize,int
 }
 void deleteBlackBorder(BMPImage& image) {
     // Seed the random number generator
-    std::srand(static_cast<unsigned>(std::time(0)));
+    //std::srand(static_cast<unsigned>(std::time(0)));
     
     // Define possible directions: right, left, down, up
     std::vector<std::tuple<int, int>> directions = {
@@ -1236,7 +1244,7 @@ void deleteBlackBorder(BMPImage& image) {
                 std::swap(directions[i], directions[j]);
             }
 
-            bool changed = false;
+            //bool changed = false;
             for (const auto& dir : directions) {
                 int dy, dx;
                 std::tie(dy, dx) = dir;
@@ -1247,7 +1255,7 @@ void deleteBlackBorder(BMPImage& image) {
                 if (ny >= 0 && ny < image.infoHeader.height && nx >= 0 && nx < image.infoHeader.width) {
                     if (image.pixels[ny * image.infoHeader.width + nx] != std::make_tuple(0, 0, 0)) {
                         a = image.pixels[ny * image.infoHeader.width + nx];
-                        changed = true;
+                        //changed = true;
                         break;
                     }
                 }
@@ -1269,7 +1277,9 @@ struct BoundingBox {
 };
 void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunksize,int proVaverageProvinceSize,int proVchunksize) {
 	std::map<std::tuple<uint8_t, uint8_t, uint8_t>,stateInterface*> states;
+	//std::map<std::tuple<int, int>,stateInterface*> posToState;
     std::map<std::tuple<uint8_t, uint8_t, uint8_t>, BoundingBox> patches;
+	std::set<std::tuple<int, int>> usedPos;
     for (int y = 0; y < image.infoHeader.height; ++y) {//count bounding box of each country
         for (int x = 0; x < image.infoHeader.width; ++x) {
             auto& pixelColor = image.pixels[y * image.infoHeader.width + x];
@@ -1382,14 +1392,17 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
         Dot bestCandidate;
         bestCandidate.x = std::rand() % image.infoHeader.width;
         bestCandidate.y = std::rand() % image.infoHeader.height;
+		if(usedPos.find(std::make_tuple(bestCandidate.x,bestCandidate.y))!=usedPos.end()){i--;continue;}
+		usedPos.insert(std::make_tuple(bestCandidate.x,bestCandidate.y));
 		auto kolor = randomColor();
 		while(states.find(kolor)!=states.end()){kolor = randomColor();}
 		bestCandidate.color = kolor;
         double bestDistance = 0;
 		if(color!=std::make_tuple(255,255,255)){
-		states[bestCandidate.color] = mapController.addState();
+			//posToState.push_back(std::make_tuple(bestCandidate.x,bestCandidate.y));
+		states[bestCandidate.color] = new stateInterface(-1);//mapController.addState();
 		states[bestCandidate.color]->owner = country->tag;
-		mapController.setName(states[bestCandidate.color]);
+		
 		country->states.push_back(states[bestCandidate.color]);
 		}
 		//states[bestCandidate.color]->sea = true;
@@ -1424,6 +1437,7 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
 	   
 	  
     }
+	usedPos.clear();
 	int startX = std::max(bbox.minX, 0);
     int startY = std::max(bbox.minY, 0);
     int endX = std::min(bbox.maxX, image.infoHeader.width - 1);
@@ -1496,6 +1510,8 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
         Dot bestCandidate;
         bestCandidate.x = std::rand() % image.infoHeader.width;
         bestCandidate.y = std::rand() % image.infoHeader.height;
+		if(usedPos.find(std::make_tuple(bestCandidate.x,bestCandidate.y))!=usedPos.end()){i--;continue;}
+		usedPos.insert(std::make_tuple(bestCandidate.x,bestCandidate.y));
 		auto kolor = randomColor();
 		//print(int(provinces.size()));
 		while(states.find(kolor)!=states.end()||provinces.find(kolor)!=provinces.end()){kolor = randomColor();}
@@ -1617,7 +1633,7 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
 		print("single pixels: "+std::to_string(singlePixel));
 		//print("number of real provinces: "+std::to_string(provinces.size()));
 	}
-	
+	//print(1);
 	for (int y = 0; y < image.infoHeader.height; ++y) {//add final provinces into the game
 		for (int x = 0; x < image.infoHeader.width; ++x) {
 			std::tuple<uint8_t, uint8_t, uint8_t>& a = image.pixels[y * image.infoHeader.width + x];
@@ -1647,21 +1663,39 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
 			}
 		}
 	}
+	//print(1);//print(2);
+	for(auto i : states){
+		//print(11);
+		if(i.second->provinces.size()==0)continue;
+			mapController.addState(i.second);
+			//name
+			mapController.setName(i.second);
+		//posToState
+		auto color = image.pixels[(i.second->center.second) * image.infoHeader.width + (i.second->center.first)];//print(12);
+		auto centerProvince = mapController.provByColor[color];//print(13);
+		
+		/*std::cout<<"start\n";
+		std::cout<<<<"\n";
+		std::cout<<(long long)(centerProvince)<<"\n";
+		std::cout<<(long long)(centerProvince->state)<<"\n";
+		std::cout<<(long long)(i.second)<<"\n";*/
+		//print(1);
+		//print(centerProvince->terrain);
+		if(centerProvince->state!=i.second)centerProvince = i.second->provinces[0];
+		//print(2);
+		//print(14);
+		i.second->victoryPoints.push_back(std::make_pair(centerProvince->id,1));//print(15);
+		i.second->centerProvince = centerProvince;//print(16);
+		i.second->randomAllStats();//print(17);
+		//i.second->generateFile();
+	}
 	for(auto i : countryController.countries){
 		auto state = i->states[randomNum(0,i->states.size()-1)];
+		if(state->id == -1) continue;
 		i->capital = state->id;
 		state->capital = true;
 		//state->victoryPoints[0].second+=5;
 		
-	}
-	for(auto i : states){
-		auto color = image.pixels[(i.second->center.second) * image.infoHeader.width + (i.second->center.first)];
-		auto centerProvince = mapController.provByColor[color];
-		if(centerProvince->state!=i.second)centerProvince = i.second->provinces[0];
-		i.second->victoryPoints.push_back(std::make_pair(centerProvince->id,1));
-		i.second->centerProvince = centerProvince;
-		i.second->randomAllStats();
-		//i.second->generateFile();
 	}
 	//print("number of real provinces: "+std::to_string(provinces.size()));
 	print("number of provinces: "+std::to_string(mapController.idCounter));
