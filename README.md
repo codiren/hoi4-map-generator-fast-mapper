@@ -1,4 +1,4 @@
-To download: Navigate to "Releases" on the right, and click on "release.7z"
+To download: Navigate to "Releases" on the right, and click on .7z flle
 
 **Program Information**
 
