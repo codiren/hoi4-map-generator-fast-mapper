@@ -41,4 +41,4 @@ showcase/guide video - https://youtu.be/edFPnLBjc3E
 
 **Compilation flag if you want to compile source file yourself**
 
-g++ -std=c++2a -O3 -o C:\master.exe C:\master.cpp --static
+`g++ -std=c++2a -O3 -o C:\master.exe C:\master.cpp --static`
