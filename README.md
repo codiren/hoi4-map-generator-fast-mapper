@@ -1,4 +1,5 @@
-To download: Navigate to "Releases" on the right, and click on .7z flle
+To download: Navigate to "Releases" on the right, and click on .7z file
+showcase/guide video - https://youtu.be/edFPnLBjc3E
 
 **Program Information**
 
