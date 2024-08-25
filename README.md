@@ -25,15 +25,16 @@ showcase/guide video - https://youtu.be/edFPnLBjc3E
 
 **Editing the Map:**
 
-1. Open `input.bmp` in Paint.
+1. Open image `input.bmp`.
 2. Choose any HOI4-supported resolution for your image (must be a multiple of 256):
    - Examples: 512x512, 768x512, 512x768, 768x768, ..., 5632x2048.
    - If choosing a large resolution, increase `provinceSize` (default is 6).
-3. Draw the map:
+3. Draw the map(don't use brush tool):
    - White color represents water.
    - Black color is filled in with nearby pixels.
    - Any other color represents a separate country.
-4. Run the program to generate a new mod.
+4. Export as 24 bit bmp image.
+5. Run the program to generate a new mod.
 
 **Example Mod:**
 
