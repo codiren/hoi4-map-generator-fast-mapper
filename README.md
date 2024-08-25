@@ -38,3 +38,7 @@ showcase/guide video - https://youtu.be/edFPnLBjc3E
 **Example Mod:**
 
 - https://steamcommunity.com/sharedfiles/filedetails/?id=3299211370
+
+**Compilation flag if you want to compile source file yourself**
+
+g++ -std=c++2a -O3 -o C:\master.exe C:\master.cpp --static
