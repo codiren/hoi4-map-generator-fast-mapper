@@ -26,7 +26,7 @@ showcase/guide video - https://youtu.be/edFPnLBjc3E
 **Editing the Map:**
 
 1. Open image `input.bmp`.
-2. Choose any HOI4-supported resolution for your image (must be a multiple of 256):
+2. Choose any HOI4-supported resolution for your image (**must be a multiple of 256**):
    - Examples: 512x512, 768x512, 512x768, 768x768, ..., 5632x2048.
    - If choosing a large resolution, increase `provinceSize` (default is 6).
 3. Draw the map(don't use brush tool):
