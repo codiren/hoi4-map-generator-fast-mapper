@@ -33,7 +33,7 @@ showcase/guide video - https://youtu.be/edFPnLBjc3E
    - White color represents water.
    - Black color is filled in with nearby pixels.
    - Any other color represents a separate country.
-4. Export as 24 bit bmp image.
+4. Export as 24 bit bmp image and name it `input.bmp`.
 5. Run the program to generate a new mod.
 
 **Example Mod:**
