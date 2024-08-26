@@ -75,17 +75,113 @@ struct stateInterface;
 void print(){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|test"<<"\n";}
 void print(std::string input){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|"<<input<<"\n";}
 void print(int input){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|"<<input<<"\n";}
+void print(long long input){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|"<<input<<"\n";}
 void print(int input,int in){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|"<<input<<" "<<in<<"\n";}
 void print(double input){std::cout<<printNum++<<" "<<(GetTickCount()-start)/1000.<<"|"<<input<<"\n";}
 int randomNum(int min, int max) {
-	return lower + std::rand() % (upper - lower + 1);
+	//return lower + std::rand() % (upper - lower + 1);
     std::random_device rd;  // Obtain a random number from hardware
     std::mt19937 gen(rd()); // Seed the generator
     std::uniform_int_distribution<> distr(min, max); // Define the range
 
     return distr(gen); // Generate the number
 }
+int randomElement(const std::vector<std::string>& vec) {
+    return std::rand() % vec.size();
+}
+std::string getRandomElement(const std::vector<std::string>& vec) {
+    return vec[std::rand() % vec.size()];
+}
+struct TreeNode {
+    double x;
+    double y;
+    TreeNode* left;
+    TreeNode* right;
 
+    TreeNode(double x, double y) : x(x), y(y), left(nullptr), right(nullptr) {}
+};
+
+// Recursive function to build the binary tree
+TreeNode* buildTree(double x, double y, int level, int n, double x_multiplier) {
+    if (level > n) {
+        return nullptr;
+    }
+
+    // Create the current node
+    TreeNode* node = new TreeNode(x, y);
+
+    if (level < n) {
+        // Calculate x positions for children with the multiplier applied
+        double x_offset = x_multiplier / (1 << (n - level)); // 2^(n-level)
+        double x_left = x - x_offset;
+        double x_right = x + x_offset;
+        double y_next = y + 1; // Inverted y coordinate
+
+        // Recursively create left and right children
+        node->left = buildTree(x_left, y_next, level + 1, n, x_multiplier);
+        node->right = buildTree(x_right, y_next, level + 1, n, x_multiplier);
+    }
+
+    return node;
+}
+
+// Function to print the binary tree coordinates
+void printTree(TreeNode* node) {
+    if (node == nullptr) {
+        return;
+    }
+
+    // Print current node
+    std::cout << std::fixed << std::setprecision(2) << "x: " << node->x << ", y: " << node->y << std::endl;
+
+    // Recursively print left and right children
+    printTree(node->left);
+    printTree(node->right);
+}
+
+// Function to shift the tree to ensure non-negative x coordinates
+void shiftTree(TreeNode* node, double& shift_amount) {
+    if (node == nullptr) {
+        return;
+    }
+
+    // Update the shift_amount based on the current node's x
+    if (node->x < shift_amount) {
+        shift_amount = node->x;
+    }
+
+    // Recursively shift left and right children
+    shiftTree(node->left, shift_amount);
+    shiftTree(node->right, shift_amount);
+}
+
+// Apply shift to tree nodes
+void applyShift(TreeNode* node, double shift_amount) {
+    if (node == nullptr) {
+        return;
+    }
+
+    // Apply the shift to the current node
+    node->x += shift_amount;
+
+    // Recursively apply shift to left and right children
+    applyShift(node->left, shift_amount);
+    applyShift(node->right, shift_amount);
+}
+
+// Function to delete the binary tree
+void deleteTree(TreeNode* node) {
+    if (node == nullptr) {
+        return;
+    }
+
+    // Recursively delete left and right children
+    deleteTree(node->left);
+    deleteTree(node->right);
+
+    // Delete the current node
+    delete node;
+}
 std::vector<std::string> split(std::string &str,std::string delim){
 	std::vector<std::string> rez;
 	int wher = 0;
@@ -164,6 +260,17 @@ void readbmp(const std::string& filename, BMPImage& image, std::map<std::tuple<u
     // Check if input image is 24-bit BMP
     if (image.infoHeader.bitCount != 24) {
         std::cerr << "Error: Input image must be a 24-bit BMP." << std::endl;
+		Sleep(INFINITE);
+    }
+	if (image.infoHeader.width != ((image.infoHeader.width/256)*256)) {
+        std::cerr << ("Error: Input image width must be multiple of 256 (current: "+std::to_string(image.infoHeader.width)+")\nTip: change image width to "
+		+std::to_string(((image.infoHeader.width/256)*256))+" or "+std::to_string((((image.infoHeader.width/256)+1)*256)))<< std::endl;
+		Sleep(INFINITE);
+    }
+	if (image.infoHeader.height != ((image.infoHeader.height/256)*256)) {
+        std::cerr << ("Error: Input image height must be multiple of 256 (current: "+std::to_string(image.infoHeader.height)+")\nTip: change image height to "
+		+std::to_string(((image.infoHeader.height/256)*256))+" or "+std::to_string((((image.infoHeader.height/256)+1)*256)))<< std::endl;
+		Sleep(INFINITE);
     }
 
     // Calculate row stride
@@ -193,6 +300,17 @@ void readbmpNoMap(const std::string& filename, BMPImage& image) {
     // Check if input image is 24-bit BMP
     if (image.infoHeader.bitCount != 24) {
         std::cerr << "Error: Input image must be a 24-bit BMP." << std::endl;
+		Sleep(INFINITE);
+    }
+	if (image.infoHeader.width != ((image.infoHeader.width/256)*256)) {
+        std::cerr << ("Error: Input image width must be multiple of 256 (current: "+std::to_string(image.infoHeader.width)+")\nTip: change image width to "
+		+std::to_string(((image.infoHeader.width/256)*256))+" or "+std::to_string((((image.infoHeader.width/256)+1)*256)))<< std::endl;
+		Sleep(INFINITE);
+    }
+	if (image.infoHeader.height != ((image.infoHeader.height/256)*256)) {
+        std::cerr << ("Error: Input image height must be multiple of 256 (current: "+std::to_string(image.infoHeader.height)+")\nTip: change image height to "
+		+std::to_string(((image.infoHeader.height/256)*256))+" or "+std::to_string((((image.infoHeader.height/256)+1)*256)))<< std::endl;
+		Sleep(INFINITE);
     }
 
     // Calculate row stride
@@ -389,11 +507,22 @@ struct modClass{
 };modClass mod;
 struct focusInterface{
 	int id;
-	int length = 10;
+	int length = 5;
+	double x = 0;
+	double y = 0;
 	std::string searchFilter = "";
 	std::string icon = "GFX_goal_unknown";
-	std::string name;
+	std::string name = "";
 	std::string desc;
+	//std::string reward;
+	std::string effect;
+	std::string type;
+	std::string needs;
+	std::string ai_will_do;
+	focusInterface* preq = nullptr;
+	focusInterface* exclusive = nullptr;
+	focusInterface* left = nullptr;
+	focusInterface* right = nullptr;
 	focusInterface(int newid){
 		id = newid;
 	}
@@ -425,6 +554,40 @@ struct localisationControllerClass{
         return tag;
     }
 };localisationControllerClass localisationController;
+struct focusMC{
+	std::map<std::string,std::vector<std::string>> images;
+    focusMC(){
+		images["trade"] = {"GFX_goal_generic_improve_relations","GFX_goal_generic_trade","GFX_goal_generic_positive_trade_relations"};
+		images["manpower"] = {"GFX_focus_generic_commonwealth_build_infantry","GFX_focus_generic_manpower","GFX_goal_generic_allies_build_infantry"};
+		images["war"] = {"GFX_goal_generic_demand_territory","GFX_focus_generic_total_war","GFX_goal_generic_territory_or_war","GFX_goal_generic_occupy_states_ongoing_war","GFX_focus_ETH_freedom_at_gunpoint"};
+		images["political"] = {"GFX_goal_generic_propaganda","GFX_goal_generic_national_unity","GFX_goal_generic_more_territorial_claims","GFX_goal_generic_political_pressure"};
+		images["left"] = {"GFX_focus_generic_workers","GFX_focus_generic_workers_and_farmers_rise","GFX_goal_generic_war_with_comintern","GFX_goal_generic_support_communism"};
+		images["right"] = {"GFX_focus_ITA_generic_fascist_workers","GFX_focus_generic_fascist_propaganda","GFX_goal_support_fascism","GFX_focus_generic_spread_fascism"};
+		images["research"] = {"GFX_focus_generic_university_1","GFX_focus_generic_field_hostpital","GFX_focus_research"};
+		images["armies"] = {"GFX_goal_generic_position_armies","GFX_goal_generic_occupy_start_war"};
+		images["mils"] = {"GFX_goal_generic_construct_mil_factory","GFX_focus_generic_reorient_production","GFX_focus_generic_tankette"};
+		images["civs"] = {"GFX_goal_generic_construct_civ_factory","GFX_goal_generic_consumer_goods","GFX_focus_generic_industry_1","GFX_focus_generic_industry_2","GFX_focus_generic_industry_3","GFX_goal_generic_production","GFX_focus_generic_modernize_industry"};
+		images["infra"] = {"GFX_goal_generic_construct_infrastructure","GFX_focus_generic_low_cost_housing","GFX_focus_generic_energy","GFX_focus_generic_road_investment"};
+	}
+	std::string build(std::pair<std::string,int> check,std::vector<std::pair<std::string,int>> what){
+		std::string str = "random_owned_controlled_state = { limit = { free_building_slots = { building = "+check.first+" size > "+std::to_string(check.second-1)+" "
+		"include_locked = yes } OR = { is_in_home_area = yes NOT = { owner = { any_owned_state = {free_building_slots = { "
+		"building = "+check.first+" size > "+std::to_string(check.second-1)+" include_locked = yes } is_in_home_area = yes } } } } } "
+		"add_extra_state_shared_building_slots = "+std::to_string(check.second);
+		for(auto i:what){
+			str = str+ " add_building_construction = { type = "+check.first+" level = "+std::to_string(check.second)+" instant_build = yes }";
+		}
+		return str+" }";
+	}
+	std::string build(std::pair<std::string,int> what){
+		std::string str = "random_owned_controlled_state = { limit = { free_building_slots = { building = "+what.first+" size > "+std::to_string(what.second-1)+" "
+		"include_locked = yes } OR = { is_in_home_area = yes NOT = { owner = { any_owned_state = {free_building_slots = { "
+		"building = "+what.first+" size > "+std::to_string(what.second-1)+" include_locked = yes } is_in_home_area = yes } } } } } "
+		"add_extra_state_shared_building_slots = "+std::to_string(what.second);
+		str = str+ " add_building_construction = { type = "+what.first+" level = "+std::to_string(what.second)+" instant_build = yes }";
+		return str+" }";
+	}
+};focusMC focusM;
 struct countryInterface{
     std::string name = "Agartha";
 	std::string tag;
@@ -438,6 +601,7 @@ struct countryInterface{
 	std::pair<int,int> center;
 	std::pair<std::pair<int,int>,std::pair<int,int>> frameBox;
 	stateInterface* centerState;//not used
+	TreeNode* parentFocusNode;double pyramidTreeSize = 0;double pyramidTreeWidth = 0;
 	void customFocusTree(){
 		//std::ifstream file("hoi4-data/national_focus/generic.txt");
 		//std::stringstream buffer;
@@ -463,15 +627,86 @@ struct countryInterface{
 		focusTreeFile<<"\nfocus = {";
 		focusTreeFile<<"\nid = focus_"+tag+"_"+std::to_string(focus->id);
 		focusTreeFile<<"\nicon = "+focus->icon;//GFX_goal_generic_allies_build_infantry
-		//focusTreeFile<<"prerequisite = { focus = army_effort }";//        unfinished
-		focusTreeFile<<"\nx = 10";//1        unfinished
-		focusTreeFile<<"\ny = 2";//0        unfinished
+		if(focus->preq)focusTreeFile<<"\nprerequisite = { focus = focus_"+tag+"_"+std::to_string(focus->preq->id)+" }";
+		if(focus->exclusive)focusTreeFile<<"\nmutually_exclusive = { focus = focus_"+tag+"_"+std::to_string(focus->exclusive->id)+" }";
+		focusTreeFile<<"\nx = "<<(focus->x+8);//1        unfinished
+		focusTreeFile<<"\ny = "<<focus->y;//0        unfinished
 		focusTreeFile<<"\ncost = "+std::to_string(focus->length);
+		if(focus->ai_will_do != "")focusTreeFile<<"\nai_will_do = { "+focus->ai_will_do+" }";
+		focusTreeFile<<"\navailable = { "+focus->needs+" }";
 		if(focus->searchFilter!="")focusTreeFile<<"\nsearch_filters = { "+focus->searchFilter+" }";
-		focusTreeFile<<"\ncompletion_reward = {";
+		focusTreeFile<<"\ncompletion_reward = {\n";
+		focusTreeFile<<focus->effect;
 		focusTreeFile<<"\n}}";
 		localisationController.addLocalization(focus->name,"focus_"+tag+"_"+std::to_string(focus->id),false);
 		localisationController.addLocalization(focus->desc,"focus_"+tag+"_"+std::to_string(focus->id)+"_desc",false);
+	}
+	void pyramidSchemeFocuses(focusInterface* focus){
+		double &y = focus->y;
+		double &x = focus->x;
+		focus->icon = getRandomElement(focusM.images["political"]);
+		focus->name = "Think Hard";
+		focus->effect = "add_political_power = 100";
+	}
+	focusInterface* recurseFocus(double x,double w,double y,focusInterface* preq) {
+		if (y >= pyramidTreeSize)return nullptr;
+	
+		// Print current node
+		//std::cout << std::fixed << std::setprecision(2) << "x: " << node->x << ", y: " << node->y << std::endl;
+			focusInterface* test = newFocus();
+			//if(node->y==0){test->x = node->x;}else{test->x = node->x+((pyramidTreeSize-node->y)/3*((parentFocusNode->x<node->x)?1:-1));}
+			//double half = ((l+r)/2);
+			test->x = x;
+			test->y = y;
+			//test->name = std::to_string(x)+" "+std::to_string(w);
+			test->preq = preq;
+			
+			pyramidSchemeFocuses(test);//randomNameNReward(test);
+			
+			//addFocus(test);
+	
+		// Recursively print left and right children
+		w /= 2;
+		
+		test->right = recurseFocus(x+w,w,y+1,test);
+		test->left = recurseFocus(x-w,w,y+1,test);
+		//if(preq == nullptr)
+			
+		return test;
+	}
+	void recurseFinishTree(focusInterface* node) {
+		if (node == nullptr)return;
+		addFocus(node);
+		recurseFinishTree(node->left);
+		recurseFinishTree(node->right);
+	}
+
+	void pyramidFocusTree(){
+		pyramidTreeSize = 8; // Number of levels in the binary tree
+		pyramidTreeWidth = pow(2, pyramidTreeSize-1);
+		//TreeNode* root = buildTree(pyramidTreeSize);
+		//;
+		recurseFinishTree(recurseFocus(pyramidTreeWidth,pyramidTreeWidth,0,nullptr));
+		
+    /*double x_multiplier = 10.0; // Adjust this multiplier to scale x distances
+
+    // Build the binary tree
+    TreeNode* root = buildTree(0, 0, 1, pyramidTreeSize, x_multiplier);
+	parentFocusNode = root;
+
+    // Find the minimum x value to shift all x coordinates to non-negative values
+    double shift_amount = 0.0;
+    shiftTree(root, shift_amount);
+    shift_amount = std::max(0.0, -shift_amount);
+
+    // Apply the shift to all nodes
+    applyShift(root, shift_amount);
+
+    // Print the tree coordinates
+    recurseFocus(root);
+
+    // Delete the binary tree to avoid memory leaks*/
+    //deleteTree(root);
 	}
 	~countryInterface(){
 		focusTreeFile<<"\n}";
@@ -728,6 +963,26 @@ struct countryControllerClass{
 	}
 };
 countryControllerClass countryController;
+
+std::vector<std::string> getFirstThreeLetters(const std::string& fileName) {
+    std::vector<std::string> result;
+    std::ifstream file(fileName);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open the file " << fileName << std::endl;
+        return result;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        if (line.size() >= 3) {
+            result.push_back(line.substr(0, 3));
+        }
+    }
+
+    file.close();
+    return result;
+}
 struct mapClass{
 	std::vector<provinceInterface*> provById = std::vector<provinceInterface*>(20000);
 	std::vector<stateInterface*> states;
@@ -1002,13 +1257,26 @@ struct mapClass{
 		newFile("src/localisation/english/countries_l_english.yml","");
 		countryInterface* biggestCountry = countryController.findBiggestCountry();
 		countryController.bookmark(std::vector<countryInterface*>(1,biggestCountry));
-		//generateFlags();
-		//biggestCountry->customFocusTree();
+		
+		/*for(auto country : countryController.countries){
+			country->customFocusTree();
+			country->pyramidFocusTree();
+		}*/
+		
 		//focusInterface* test = biggestCountry->newFocus();
 		//biggestCountry->addFocus(test);
 		
 		
 		//print("job complete");
+	}
+	void applyFocusTrees(){
+		for(auto i:getFirstThreeLetters("medieval_tags.txt")){
+			auto country = countryController.addCountry();
+			country->tag = i;
+			country->customFocusTree();
+			country->pyramidFocusTree();
+		}
+		
 	}
 	~mapClass(){
 		
@@ -1075,6 +1343,7 @@ int main(){//system("cls");
 	print("starting");
 	//watermark
 	mapController.drawnMap();
+	//mapController.applyFocusTrees();
 	//mapController.setSize();
 	//system("pause");
 }
