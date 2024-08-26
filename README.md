@@ -10,7 +10,7 @@ showcase/guide video - https://youtu.be/edFPnLBjc3E
 
 1. Open `run.bat`.
 2. If the console displays "SUCCESS, took x.xxx seconds," the program has worked.
-3. If the console repeatedly shows "starting," try increasing `optimizationFactor` (default is 3.6) in `config.ini`. 
+3. If the console repeatedly shows "starting," try increasing `optimizationFactor` or setting it to `100000` in `config.ini`. 
    - Increasing this setting will slow down the program but may reduce crashes.
 
 **Post-Execution:**
