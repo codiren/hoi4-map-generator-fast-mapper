@@ -33,7 +33,7 @@ If the mod is not showing up in the launcher then in the launcher go:
 2. Choose any HOI4-supported resolution for your image (**must be a multiple of 256**):
    - Examples: 512x512, 768x512, 512x768, 768x768, ..., 5632x2048.
    - If choosing a large resolution, increase `provinceSize` (default is 6).
-3. Draw the map(don't use brush tool):
+3. Draw the map(use pencil tool):
    - White color represents water.
    - Black color is filled in with nearby pixels.
    - Any other color represents a separate country.
