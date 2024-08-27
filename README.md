@@ -1,6 +1,6 @@
 To download: Navigate to "Releases" on the right, and click on .7z file
 
-showcase/guide video - youtu.be/edFPnLBjc3E
+showcase/guide video - https://youtu.be/edFPnLBjc3E
 
 **Program Information**
 
@@ -48,4 +48,4 @@ If the mod is not showing up in the launcher then in the launcher go:
 
 `g++ -std=c++2a -O3 -o C:\master.exe C:\master.cpp --static`
 
-tutorial how to download C++ compiler: youtu.be/sQjI5vqKUEo
+Indian tutorial how to download C++ compiler: https://youtu.be/sQjI5vqKUEo
