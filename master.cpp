@@ -262,6 +262,16 @@ void readbmp(const std::string& filename, BMPImage& image, std::map<std::tuple<u
         std::cerr << "Error: Input image must be a 24-bit BMP." << std::endl;
 		Sleep(INFINITE);
     }
+	if (image.infoHeader.width < 512 || image.infoHeader.height < 512) {
+        std::cerr << "Error: Width or Height can't be smaller than 512\ncurrent: "+std::to_string(image.infoHeader.width)+"x"
+		+std::to_string(image.infoHeader.height) << std::endl;
+		Sleep(INFINITE);
+    }
+	if (image.infoHeader.width > 5632 || image.infoHeader.height > 2048) {
+        std::cerr << "Error: Width can't be bigger than 5632 and Height than 2048\ncurrent: "+std::to_string(image.infoHeader.width)+"x"
+		+std::to_string(image.infoHeader.height) << std::endl;
+		Sleep(INFINITE);
+    }
 	if (image.infoHeader.width != ((image.infoHeader.width/256)*256)) {
         std::cerr << ("Error: Input image width must be multiple of 256 (current: "+std::to_string(image.infoHeader.width)+")\nTip: change image width to "
 		+std::to_string(((image.infoHeader.width/256)*256))+" or "+std::to_string((((image.infoHeader.width/256)+1)*256)))<< std::endl;
@@ -300,6 +310,16 @@ void readbmpNoMap(const std::string& filename, BMPImage& image) {
     // Check if input image is 24-bit BMP
     if (image.infoHeader.bitCount != 24) {
         std::cerr << "Error: Input image must be a 24-bit BMP." << std::endl;
+		Sleep(INFINITE);
+    }
+	if (image.infoHeader.width < 512 || image.infoHeader.height < 512) {
+        std::cerr << "Error: Width or Height can't be smaller than 512\ncurrent: "+std::to_string(image.infoHeader.width)+"x"
+		+std::to_string(image.infoHeader.height) << std::endl;
+		Sleep(INFINITE);
+    }
+	if (image.infoHeader.width > 5632 || image.infoHeader.height > 2048) {
+        std::cerr << "Error: Width can't be bigger than 5632 and Height than 2048\ncurrent: "+std::to_string(image.infoHeader.width)+"x"
+		+std::to_string(image.infoHeader.height) << std::endl;
 		Sleep(INFINITE);
     }
 	if (image.infoHeader.width != ((image.infoHeader.width/256)*256)) {
@@ -1969,7 +1989,7 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
 	//print("number of real provinces: "+std::to_string(provinces.size()));
 	print("number of provinces: "+std::to_string(mapController.idCounter));
 	if(mapController.idCounter>65536)print("PROVINCES>65536 GAME WILL CRASH");
-	else if(mapController.idCounter>23000)print("PROVINCES>23000 GAME WILL LIKELY CRASH");
+	else if(mapController.idCounter>23000)print("PROVINCES>23000 GAME WILL NOT RENDER SOME PROVINCES");
 	/*for(auto i : mapController.provByColor){
 		print(provinces[i.first]);
 		//std::cout<<(provinces[i.first])<<"\n";
