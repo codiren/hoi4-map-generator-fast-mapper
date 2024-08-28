@@ -26,6 +26,13 @@ If the mod is not showing up in the launcher then in the launcher go:
 1. All installed mods > upload mod > create a mod
 2. After creation select the mod you have created in the list > "..." > show in folder
 3. Then copy all files from `src` folder and paste them in the folder that the launcher has showed you
+4. Go to the folder that the launcher directed you to.
+5. Move up one level in the directory.
+6. Look for a file with the same name as the one you entered in the launcher for the mod, ending with ".mod".
+7. Add the specified lines to this file.
+replace_path="history/states"
+replace_path="history/units"
+replace_path="map/strategicregions"
 
 **Editing the Map:**
 
