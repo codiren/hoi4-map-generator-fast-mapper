@@ -30,9 +30,9 @@ If the mod is not showing up in the launcher then in the launcher go:
 5. Move up one level in the directory.
 6. Look for a file with the same name as the one you entered in the launcher for the mod, ending with ".mod".
 7. Add the specified lines to this file.
-replace_path="history/states"
-replace_path="history/units"
-replace_path="map/strategicregions"
+8. replace_path="history/states"
+9. replace_path="history/units"
+10. replace_path="map/strategicregions"
 
 **Editing the Map:**
 
