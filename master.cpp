@@ -1540,6 +1540,55 @@ void deleteBlackBorder(BMPImage& image) {
     // Seed the random number generator
     //std::srand(static_cast<unsigned>(std::time(0)));
     
+	
+	
+	if(mod.configs["removeFuzzyBorder"] == "yes"){
+		
+		
+for (int y = 1; y < image.infoHeader.height - 1; y++) {
+    for (int x = 1; x < image.infoHeader.width - 1; x++) {
+        auto currentPixel = image.pixels[y * image.infoHeader.width + x];
+        
+        // If the current pixel is black, continue to the next pixel
+        if (currentPixel == std::make_tuple(0, 0, 0)) {
+            continue;
+        }
+        
+        bool different = false;
+
+        // Check the four neighbors: up, down, left, right
+        int dx[] = {0, 0, -1, 1}; // horizontal movement: left, right
+        int dy[] = {-1, 1, 0, 0}; // vertical movement: up, down
+
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            auto neighborPixel = image.pixels[ny * image.infoHeader.width + nx];
+
+            if (neighborPixel == std::make_tuple(0, 0, 0)) {
+                continue; // Ignore black neighbors
+            }
+
+            if (neighborPixel != currentPixel) {
+                different = true;
+                break;
+            }
+        }
+
+        // If a different color is found among the four neighbors, set the current pixel to black
+        if (different) {
+            image.pixels[y * image.infoHeader.width + x] = std::make_tuple(0, 0, 0);
+        }
+    }
+}
+		
+		
+		print("removed fuzzy border");
+	}
+	
+	
+	
     // Define possible directions: right, left, down, up
     std::vector<std::tuple<int, int>> directions = {
         {0, 1},  // right
@@ -1594,6 +1643,8 @@ struct BoundingBox {
     BoundingBox() : minX(INT_MAX), minY(INT_MAX), maxX(INT_MIN), maxY(INT_MIN), pixelCount(0) {}
 };
 void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunksize,int proVaverageProvinceSize,int proVchunksize,int seaProvSize) {
+	
+	
 	std::map<std::tuple<uint8_t, uint8_t, uint8_t>,stateInterface*> states;
 	//std::map<std::tuple<int, int>,stateInterface*> posToState;
     std::map<std::tuple<uint8_t, uint8_t, uint8_t>, BoundingBox> patches;
@@ -1613,6 +1664,8 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
 	std::filesystem::create_directories("src/gfx/flags");
 	std::filesystem::create_directories("src/gfx/flags/medium");
 	std::filesystem::create_directories("src/gfx/flags/small");
+	if(patches.size()>500 && mod.configs["removeFuzzyBorder"] != "yes")print("WARNING detected "+std::to_string(patches.size())+" countries\nIf this is not intended consider changing removeFuzzyBorder to `yes`\n");
+	else print("detected "+std::to_string(patches.size())+" countries");
     for (auto& entry : patches) {//make states
 		const auto& color = entry.first;
         const auto& bbox = entry.second;
