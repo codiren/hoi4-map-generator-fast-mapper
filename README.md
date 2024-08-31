@@ -2,15 +2,14 @@ To download: Navigate to "Releases" on the right, and click on .7z file
 
 showcase/guide video - https://youtu.be/edFPnLBjc3E
 
-**Program Information**
-
 - **Platform:** Windows only
 
 **Usage Instructions:**
 
-1. Open `run.bat`.
-2. If the console displays "SUCCESS, took x.xxx seconds," the program has worked.
-3. If the console repeatedly shows "starting," try increasing `optimizationFactor` or setting it to `100000` in `config.ini`. 
+1. Change settings inside of `config.ini`.
+2. Open `run.bat`.
+3. If the console displays "SUCCESS, took x.xxx seconds," the program has worked.
+4. If the console repeatedly shows "starting," try increasing `optimizationFactor` or setting it to `100000` in `config.ini`. 
    - Increasing this setting will slow down the program but may reduce crashes.
 
 **Testing the Mod:**
@@ -22,7 +21,8 @@ showcase/guide video - https://youtu.be/edFPnLBjc3E
 **Post-Execution:**
 
 - If successful, a folder named `src` should appear. This folder is your mod folder. 
-If the mod is not showing up in the launcher then in the launcher go: 
+If the mod is not showing up in the launcher then change hoi4ModsLocation or
+follow these steps in the launcher: 
 1. All installed mods > upload mod > create a mod
 2. After creation select the mod you have created in the list > "..." > show in folder
 3. Then copy all files from `src` folder and paste them in the folder that the launcher has showed you
@@ -44,8 +44,9 @@ If the mod is not showing up in the launcher then in the launcher go:
    - White color represents water.
    - Black color is filled in with nearby pixels.
    - Any other color represents a separate country.
-4. Export as 24 bit bmp image and name it `input.bmp`.
-5. Run the program to generate a new mod.
+4. If your image has blurry border you can set removeFuzzyBorder to `yes` to remove it
+5. Export as 24 bit bmp image and name it `input.bmp`.
+6. Run the program to generate a new mod.
 
 **Example Mod:**
 
