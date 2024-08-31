@@ -415,7 +415,7 @@ std::tuple<uint8_t,uint8_t,uint8_t> color = std::make_tuple(0, 0, 0),std::string
     //std::cout << "BMP file created successfully: " << filename << std::endl;
 }
 void generateRandomProvincesOntoBMP(BMPImage& image, int averageProvinceSize,int chunksize);
-void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunksize,int proVaverageProvinceSize,int proVchunksize);
+void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunksize,int proVaverageProvinceSize,int proVchunksize,int seaProvSize);
 void deleteBlackBorder(BMPImage& image);
 void finishImage(BMPImage& image,std::string where,bool headers = true);
 void landNSeaHeightSeperation(BMPImage& provinces,BMPImage& height,BMPImage& terrain);
@@ -452,12 +452,25 @@ struct modClass{
 	std::vector<std::string> replace;
 	std::string gameVersion = "1.14.*";
 	int timesbuilt = 1;
+	std::map<std::string,std::string> configs;
 	void addTag(std::string tag){
 		tags.insert(tag);
+	}
+	void readConfig(){
+		std::ifstream file("config.ini");
+		std::string line;
+		std::string name;
+		while (std::getline(file, line)) {
+			if(name == ""){name = line;continue;}
+			configs[name] = line;
+			name = "";
+		}
+		file.close();
 	}
 	modClass(){
 		std::filesystem::remove_all("src");
 		std::filesystem::create_directories("src");
+		readConfig();
 	}
 	void makeDescriptor(bool outsider = false){
 		std::ofstream descriptor;
@@ -465,7 +478,20 @@ struct modClass{
 			CHAR my_documents[MAX_PATH];
 			HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
 			std::string documentsPath(my_documents);
-			documentsPath += "\\Paradox Interactive\\Hearts of Iron IV\\mod\\generatedMapModDescriptor.mod";
+			
+			std::string str = configs["hoi4ModsLocation"];
+			std::string substring = "<userDocuments>";
+			size_t pos = str.find(substring);
+
+			// If the substring is found, remove it
+			if (pos != std::string::npos) {
+				str.erase(pos, substring.length());
+				documentsPath += str;
+			}else{
+				documentsPath = str;
+			}
+			
+			//"\\Paradox Interactive\\Hearts of Iron IV\\mod\\generatedMapModDescriptor.mod";
 			//print(documentsPath);
 			descriptor.open(documentsPath);
 		} else {
@@ -1238,15 +1264,18 @@ struct mapClass{
 		mapSize[0]=provinces.infoHeader.width;
 		mapSize[1]=provinces.infoHeader.height;
 		deleteBlackBorder(provinces);
-		std::ifstream config("config.ini");
-		std::string t;
-		float optimizationFactor;
-		int stateSize,stateSizeOpti;
-		int provinceSize,provinceSizeOpti;
-		config>>t;config>>stateSize;config>>t;config>>provinceSize;config>>t;config>>optimizationFactor;config.close();
-		stateSizeOpti = stateSize*optimizationFactor;
-		provinceSizeOpti = provinceSize*optimizationFactor;
-		countriesMapIntoStates(provinces,stateSize,stateSizeOpti,provinceSize,provinceSizeOpti);//25 60    50 140  60,160  75,240
+		//std::ifstream config("config.ini");
+		//std::string t;
+		//print(mod.configs["optimizationFactor"]);
+		float optimizationFactor = std::stof(mod.configs["optimizationFactor"]);
+		float stateSize = std::stof(mod.configs["stateSize"]);
+		float provinceSize = std::stof(mod.configs["provinceSize"]);
+		float seaProvSize = std::stof(mod.configs["seaProvinceSize"]);
+		int stateSizeOpti = stateSize*optimizationFactor;
+		int provinceSizeOpti = provinceSize*optimizationFactor;
+		//config>>t;config>>stateSize;config>>t;config>>provinceSize;config>>t;config>>optimizationFactor;config.close();
+		
+		countriesMapIntoStates(provinces,stateSize,stateSizeOpti,provinceSize,provinceSizeOpti,int(seaProvSize));//25 60    50 140  60,160  75,240
 		print("provincesed");
 		findCoastals(provinces);
 		print("land and sea seperated");
@@ -1564,7 +1593,7 @@ struct BoundingBox {
 	int pixelCount; // New member to store the number of pixels
     BoundingBox() : minX(INT_MAX), minY(INT_MAX), maxX(INT_MIN), maxY(INT_MIN), pixelCount(0) {}
 };
-void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunksize,int proVaverageProvinceSize,int proVchunksize) {
+void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunksize,int proVaverageProvinceSize,int proVchunksize,int seaProvSize) {
 	std::map<std::tuple<uint8_t, uint8_t, uint8_t>,stateInterface*> states;
 	//std::map<std::tuple<int, int>,stateInterface*> posToState;
     std::map<std::tuple<uint8_t, uint8_t, uint8_t>, BoundingBox> patches;
@@ -1588,6 +1617,8 @@ void countriesMapIntoStates(BMPImage& image, int averageProvinceSize, int chunks
 		const auto& color = entry.first;
         const auto& bbox = entry.second;
 	int numDots = (bbox.pixelCount)/(averageProvinceSize*averageProvinceSize);	
+	if(color == std::make_tuple(255,255,255))numDots = (bbox.pixelCount)/(seaProvSize*seaProvSize);	
+	
 	//if(color == std::make_tuple(255,255,255))numDots = (bbox.pixelCount)/((averageProvinceSize*2)*(averageProvinceSize*2));
 	if(numDots==0)numDots++;
 	if(numDots==1&&bbox.pixelCount>350)numDots++;
