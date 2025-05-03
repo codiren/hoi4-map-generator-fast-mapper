@@ -55,5 +55,3 @@ follow these steps in the launcher:
 **Compilation flag if you want to compile source file yourself**
 
 `g++ -std=c++2a -O3 -o C:\master.exe C:\master.cpp --static`
-
-Indian tutorial how to download C++ compiler: https://youtu.be/sQjI5vqKUEo
